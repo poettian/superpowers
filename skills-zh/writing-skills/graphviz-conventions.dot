@@ -1,0 +1,172 @@
+digraph STYLE_GUIDE {
+    // 我们 process DSL 的 style guide，用 DSL 自身编写
+
+    // Node type examples with their shapes
+    subgraph cluster_node_types {
+        label="节点类型和形状";
+
+        // Questions are diamonds
+        "这是一个问题吗？" [shape=diamond];
+
+        // Actions are boxes (default)
+        "采取一个行动" [shape=box];
+
+        // Commands are plaintext
+        "git commit -m 'msg'" [shape=plaintext];
+
+        // States are ellipses
+        "当前状态" [shape=ellipse];
+
+        // Warnings are octagons
+        "停止：关键警告" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
+
+        // Entry/exit are double circles
+        "流程开始" [shape=doublecircle];
+        "流程完成" [shape=doublecircle];
+
+        // Examples of each
+        "测试通过了吗？" [shape=diamond];
+        "先写测试" [shape=box];
+        "npm test" [shape=plaintext];
+        "我卡住了" [shape=ellipse];
+        "绝不要使用 git add -A" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
+    }
+
+    // Edge naming conventions
+    subgraph cluster_edge_types {
+        label="EDGE LABELS";
+
+        "二元决策？" [shape=diamond];
+        "Yes path" [shape=box];
+        "No path" [shape=box];
+
+        "二元决策？" -> "Yes path" [label="yes"];
+        "二元决策？" -> "No path" [label="no"];
+
+        "多选？" [shape=diamond];
+        "选项 A" [shape=box];
+        "选项 B" [shape=box];
+        "选项 C" [shape=box];
+
+        "多选？" -> "选项 A" [label="condition A"];
+        "多选？" -> "选项 B" [label="condition B"];
+        "多选？" -> "选项 C" [label="otherwise"];
+
+        "流程 A 完成" [shape=doublecircle];
+        "流程 B 开始" [shape=doublecircle];
+
+        "流程 A 完成" -> "流程 B 开始" [label="triggers", style=dotted];
+    }
+
+    // Naming patterns
+    subgraph cluster_naming_patterns {
+        label="命名模式";
+
+        // Questions end with ?
+        "我应该做 X 吗？";
+        "这可以是 Y 吗？";
+        "Z 为真吗？";
+        "我已经做了 W 吗？";
+
+        // Actions start with verb
+        "编写测试";
+        "搜索模式";
+        "提交变更";
+        "请求帮助";
+
+        // Commands are literal
+        "grep -r 'pattern' .";
+        "git status";
+        "npm run build";
+
+        // States describe situation
+        "测试正在失败";
+        "构建完成";
+        "卡在错误上";
+    }
+
+    // Process structure template
+    subgraph cluster_structure {
+        label="流程结构模板";
+
+        "触发：某事发生" [shape=ellipse];
+        "初始检查？" [shape=diamond];
+        "主要行动" [shape=box];
+        "git status" [shape=plaintext];
+        "另一个检查？" [shape=diamond];
+        "替代行动" [shape=box];
+        "停止：不要这样做" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
+        "流程完成" [shape=doublecircle];
+
+        "触发：某事发生" -> "初始检查？";
+        "初始检查？" -> "主要行动" [label="yes"];
+        "初始检查？" -> "替代行动" [label="no"];
+        "主要行动" -> "git status";
+        "git status" -> "另一个检查？";
+        "另一个检查？" -> "流程完成" [label="ok"];
+        "另一个检查？" -> "停止：不要这样做" [label="problem"];
+        "替代行动" -> "流程完成";
+    }
+
+    // When to use which shape
+    subgraph cluster_shape_rules {
+        label="何时使用每种形状";
+
+        "选择形状" [shape=ellipse];
+
+        "它是决策吗？" [shape=diamond];
+        "使用 diamond" [shape=diamond, style=filled, fillcolor=lightblue];
+
+        "它是命令吗？" [shape=diamond];
+        "使用 plaintext" [shape=plaintext, style=filled, fillcolor=lightgray];
+
+        "它是警告吗？" [shape=diamond];
+        "使用 octagon" [shape=octagon, style=filled, fillcolor=pink];
+
+        "它是 entry/exit 吗？" [shape=diamond];
+        "使用 doublecircle" [shape=doublecircle, style=filled, fillcolor=lightgreen];
+
+        "它是 state 吗？" [shape=diamond];
+        "使用 ellipse" [shape=ellipse, style=filled, fillcolor=lightyellow];
+
+        "默认：使用 box" [shape=box, style=filled, fillcolor=lightcyan];
+
+        "选择形状" -> "它是决策吗？";
+        "它是决策吗？" -> "使用 diamond" [label="yes"];
+        "它是决策吗？" -> "它是命令吗？" [label="no"];
+        "它是命令吗？" -> "使用 plaintext" [label="yes"];
+        "它是命令吗？" -> "它是警告吗？" [label="no"];
+        "它是警告吗？" -> "使用 octagon" [label="yes"];
+        "它是警告吗？" -> "它是 entry/exit 吗？" [label="no"];
+        "它是 entry/exit 吗？" -> "使用 doublecircle" [label="yes"];
+        "它是 entry/exit 吗？" -> "它是 state 吗？" [label="no"];
+        "它是 state 吗？" -> "使用 ellipse" [label="yes"];
+        "它是 state 吗？" -> "默认：使用 box" [label="no"];
+    }
+
+    // Good vs bad examples
+    subgraph cluster_examples {
+        label="好例子 vs 坏例子";
+
+        // Good: specific and shaped correctly
+        "测试失败" [shape=ellipse];
+        "阅读错误消息" [shape=box];
+        "能复现吗？" [shape=diamond];
+        "git diff HEAD~1" [shape=plaintext];
+        "绝不要忽略错误" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
+
+        "测试失败" -> "阅读错误消息";
+        "阅读错误消息" -> "能复现吗？";
+        "能复现吗？" -> "git diff HEAD~1" [label="yes"];
+
+        // Bad: vague and wrong shapes
+        bad_1 [label="某些东西不对", shape=box];  // 应该是 ellipse（state）
+        bad_2 [label="修它", shape=box];  // 太含糊
+        bad_3 [label="检查", shape=box];  // 应该是 diamond
+        bad_4 [label="运行命令", shape=box];  // 应该是带实际命令的 plaintext
+
+        bad_1 -> bad_2;
+        bad_2 -> bad_3;
+        bad_3 -> bad_4;
+    }
+}
